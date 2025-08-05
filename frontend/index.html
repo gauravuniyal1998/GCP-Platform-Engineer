@@ -1,1 +1,26 @@
-# index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cloud Landing Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Cloud Deployment</h1>
+        <p>This is a basic frontend hosted on GCP Compute Engine.</p>
+        <p>Backend Status: <span id="status">Loading...</span></p>
+    </div>
+
+    <script>
+        fetch('http://<YOUR_BACKEND_IP>:5000/status')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('status').innerText = data.status;
+            })
+            .catch(() => {
+                document.getElementById('status').innerText = "Failed to fetch backend";
+            });
+    </script>
+</body>
+</html>
