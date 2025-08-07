@@ -15,7 +15,7 @@ jobs:
       - uses: google-github-actions/upload-cloud-storage@v1
         with:
           path: './frontend'  # Key change: Target frontend folder
-          destination: 'gs://frontend-static-hosting'
+          destination: 'gs://frontend-static-hosting/frontend'
           credentials: ${{ secrets.GCP_SA_KEY }}
           # Optional: Set cache control for assets
           predefinedAcl: 'publicRead'
