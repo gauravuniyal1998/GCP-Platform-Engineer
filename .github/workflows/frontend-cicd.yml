@@ -20,3 +20,10 @@ jobs:
           # Optional: Set cache control for assets
           predefinedAcl: 'publicRead'
           metadata: 'Cache-Control=public, max-age=3600'
+      - run: |
+          gsutil -m cp -r ./frontend gs://frontend-static-hosting/frontend
+          gsutil setmeta -h "Cache-Control: no-cache, max-age=0" gs://frontend-static-hosting/frontend/index.html
+
+      # 4. Verify sync
+      - run: gsutil ls -r gs://frontend-static-hosting/frontend
+    
