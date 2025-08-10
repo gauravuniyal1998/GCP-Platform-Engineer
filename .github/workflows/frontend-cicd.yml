@@ -26,7 +26,7 @@ jobs:
           parent: false
           predefinedAcl: 'publicRead'
           headers: 'Cache-Control=public, max-age=3600'
-          process_gcloudignore: true
+          process_gcloudignore: false
 
       # 4. Verify sync
       - run: gsutil ls -r gs://frontend-static-hosting/frontend
