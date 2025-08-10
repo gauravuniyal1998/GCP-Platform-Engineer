@@ -6,17 +6,26 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read  # Allow reading the repository contents
+      id-token: write  # Allow generating an ID token for GCP authentication
+
     steps:
+      - name: Test GCP Auth
+        run: |
+          gcloud auth list
+          gcloud config list
+          #Test bucket access
+          gsutil ls gs://frontend-static-hosting
+          gsutil ls gs://frontend-static-hosting/frontend
       # 1. Checkout code
       - uses: actions/checkout@v4
-
-      # 2. Set up Google Cloud SDK with authentication
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      # 2. Set up legacy authentication for GCP using JSON key
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: indigo-skyline-467604-d6
-          export_default_credentials: true
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
       # 3. Upload frontend files to GCS
       - name: Upload Frontend to GCS
         uses: google-github-actions/upload-cloud-storage@v1
@@ -26,13 +35,7 @@ jobs:
           parent: false
           predefinedAcl: 'publicRead'
           headers: 'Cache-Control=public, max-age=3600'
-          process_gcloudignore: false
-
+          process_gcloudignore: false  # Do not process .gcloudignore file
+          
       # 4. Verify sync
       - run: gsutil ls -r gs://frontend-static-hosting/frontend
-      - name: Test GCP Auth
-        run: |
-          gcloud auth list
-          gcloud config list
-          #Test bucket access
-          gsutil ls gs://frontend-static-hosting
