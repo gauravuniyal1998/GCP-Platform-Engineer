@@ -34,7 +34,8 @@ jobs:
           destination: 'gs://frontend-static-hosting/frontend'
           parent: false
           predefinedAcl: 'publicRead'
-          headers: "Cache-Control: public, max-age=3600"
+          #removed headers # to avoid issues with the format
+          #headers: "Cache-Control: public, max-age=3600"
           process_gcloudignore: false  # Do not process .gcloudignore file
           
       # 4. Verify sync
