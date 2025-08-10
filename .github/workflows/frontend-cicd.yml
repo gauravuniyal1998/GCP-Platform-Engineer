@@ -33,10 +33,13 @@ jobs:
           path: './frontend'  # Target frontend folder
           destination: frontend-static-hosting/frontend
           parent: false
-          predefinedAcl: 'publicRead'
           #removed headers # to avoid issues with the format
           #headers: "Cache-Control: public, max-age=3600"
           process_gcloudignore: false  # Do not process .gcloudignore file
+      - name: Grant public access
+        run: |
+          gsutil iam ch allUsers:objectViewer gs://frontend-static-hosting
+
 
       # 4. Verify sync
       - run: gsutil ls -r gs://frontend-static-hosting/frontend
