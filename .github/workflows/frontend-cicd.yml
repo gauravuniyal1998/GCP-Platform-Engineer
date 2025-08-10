@@ -15,7 +15,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: indigo-skyline-467604-d6
 
       # 3. Upload frontend files to GCS
       - uses: google-github-actions/upload-cloud-storage@v1
