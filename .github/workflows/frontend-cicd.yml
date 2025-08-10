@@ -31,12 +31,12 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v1
         with:
           path: './frontend'  # Target frontend folder
-          destination: 'gs://frontend-static-hosting/frontend'
+          destination: gs://frontend-static-hosting/frontend
           parent: false
           predefinedAcl: 'publicRead'
           #removed headers # to avoid issues with the format
           #headers: "Cache-Control: public, max-age=3600"
           process_gcloudignore: false  # Do not process .gcloudignore file
-          
+
       # 4. Verify sync
       - run: gsutil ls -r gs://frontend-static-hosting/frontend
