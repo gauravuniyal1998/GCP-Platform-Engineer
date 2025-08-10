@@ -20,7 +20,7 @@ jobs:
       # 3. Upload frontend files to GCS
       - uses: google-github-actions/upload-cloud-storage@v1
         with:
-          path: './frontend'  # Target frontend folder
+          path: './frontend/**'  # Target frontend folder
           destination: 'gs://frontend-static-hosting/frontend'
           predefinedAcl: 'publicRead'
           metadata: 'Cache-Control=public, max-age=3600'
