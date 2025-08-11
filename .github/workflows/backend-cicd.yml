@@ -1,0 +1,40 @@
+name: deploy backend to GCS
+on:
+  push:
+    paths: [ 'backend/' ]
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read  # Allow reading the repository contents
+            id-token: write  # Allow generating an ID token for GCP authentication
+        steps:
+            - name: Test GCP Auth
+              run: |
+                gcloud auth list
+                gcloud config list
+                ##Test bucket access
+                gsutil ls gs://backend-static-hosting
+                gsutil ls gs://backend-static-hosting/backend
+            # checkout code
+            -   uses: actions/checkout@v4
+            # set up legacy authentication to Google Cloud using JSON key
+            -   name: Authenticate to Google Cloud
+                uses: google-github-actions/auth@v1
+                with:
+                    credentials_json: ${{ secrets.GCP_BACKEND_KEY }}
+            # upload backend files to GCS
+            -   name: Upload Backend to GCS
+                uses: google-github-actions/upload-cloud-storage@v2
+                with:
+                    path: './backend'  # Target backend folder
+                    destination: backend-static-hosting/backend
+                    parent: false
+                    cacheControl: 'public, max-age=3600, immutable'
+                    process_gcloudignore: false  # Do not process .gcloudignore file
+
+            # verify sync
+            - run: gsutil ls -r gs://backend-static-hosting/backend
+            
+                
+                
