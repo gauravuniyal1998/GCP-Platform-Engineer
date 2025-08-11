@@ -33,8 +33,7 @@ jobs:
           path: './frontend'  # Target frontend folder
           destination: frontend-static-hosting/frontend
           parent: false
-          #removed headers # to avoid issues with the format
-          #headers: "Cache-Control: public, max-age=3600"
+          headers: "Cache-Control: public, max-age=3600, immutable"
           process_gcloudignore: false  # Do not process .gcloudignore file
 
       # 4. Verify sync
