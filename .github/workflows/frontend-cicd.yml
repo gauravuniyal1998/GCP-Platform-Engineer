@@ -1,7 +1,8 @@
 name: Deploy Frontend to GCS
 on:
   push:
-    paths: [ 'frontend/' ]
+    branches: [ 'main' ]
+    paths: [ 'frontend/' ] # Trigger on changes to the frontend directory
 jobs:
   deploy:
     runs-on: ubuntu-latest
