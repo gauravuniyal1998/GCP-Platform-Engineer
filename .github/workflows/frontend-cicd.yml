@@ -28,7 +28,6 @@ jobs:
     #grant public access to the bucket
       - name: Grant public access
         run: |
-          gsutil -m acl ch -R -u AllUsers:R gs://frontend-static-hosting/frontend
           gsutil -m setmeta -R -h "Cache-Control:public, max-age=3600" gs://frontend-static-hosting/frontend
 
       # 3. Upload frontend files to GCS
