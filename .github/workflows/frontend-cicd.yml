@@ -25,11 +25,7 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-    #grant public access to the bucket
-      - name: Grant public access
-        run: |
-          gsutil -m setmeta -R -h "Cache-Control:public, max-age=3600" gs://frontend-static-hosting/frontend
-
+    
       # 3. Upload frontend files to GCS
       - name: Upload Frontend to GCS
         uses: google-github-actions/upload-cloud-storage@v2
