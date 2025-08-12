@@ -42,19 +42,19 @@ jobs:
             -   name: Configure Docker to use gcloud
                 run: |
                     gcloud config set project indigo-skyline-467604-d6
-                    gcloud auth configure-docker --quiet
+                    gcloud auth configure-docker asia-south2-docker.pkg.dev --quiet
 
             # 4. Build and push Docker image to GCR
             -   name: Build and Push Docker Image
                 run: |
-                    docker build -t gcr.io/indigo-skyline-467604-d6/backend:latest ./backend
-                    docker push gcr.io/indigo-skyline-467604-d6/backend:latest
+                    docker build -t asia-south2-docker.pkg.dev/indigo-skyline-467604-d6/backend-repo/backend:latest ./backend
+                    docker push asia-south2-docker.pkg.dev/indigo-skyline-467604-d6/backend-repo/backend:latest
             
             # 5. Deploy to Cloud Run
             -   name: Deploy to Cloud Run
                 run: |
                     gcloud run deploy backend-service \
-                    --image gcr.io/indigo-skyline-467604-d6/backend:latest \
+                    --image asia-south2-docker.pkg.dev/indigo-skyline-467604-d6/backend-repo/backend:latest \
                     --platform managed \
                     --region asia-south2 \
                     --port 5000 \
