@@ -9,6 +9,7 @@ jobs:
             contents: read  # Allow reading the repository contents
             id-token: write  # Allow generating an ID token for GCP authentication
         steps:
+            # 1. Test GCP Auth
             - name: Test GCP Auth
               run: |
                 gcloud auth list
@@ -16,13 +17,35 @@ jobs:
                 ##Test bucket access
                 gsutil ls gs://backend-static-hosting
                 gsutil ls gs://backend-static-hosting/backend
-            # checkout code
             -   uses: actions/checkout@v4
-            # set up legacy authentication to Google Cloud using JSON key
+            
+            # 2. set up legacy authentication to Google Cloud using JSON key
             -   name: Authenticate to Google Cloud
                 uses: google-github-actions/auth@v1
                 with:
                     credentials_json: ${{ secrets.GCP_BACKEND_KEY }}
+            
+            # 3. COnfiguring Docker to use GCloud
+            -   name: Configure Docker to use gcloud
+                run: |
+                    gcloud auth configure-docker --quiet
+
+            # 4. Build and push Docker image to GCR
+            -   name: Build and Push Docker Image
+                run: |
+                    docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend:${{ github.sha }} ./backend
+                    docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend:${{ github.sha }}
+            
+            # 5. Deploy to Cloud Run
+            -   name: Deploy to Cloud Run
+                run: |
+                    gcloud run deploy backend:${{ github.sha }} \
+                    --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend:${{ github.sha }} \
+                    --platform managed \
+                    --region asia-south2 \
+                    --port 5000 \
+                    --allow-unauthenticated
+            
             # upload backend files to GCS
             -   name: Upload Backend to GCS
                 uses: google-github-actions/upload-cloud-storage@v2
@@ -35,6 +58,6 @@ jobs:
 
             # verify sync
             - run: gsutil ls -r gs://backend-static-hosting/backend
-            
+
                 
                 
