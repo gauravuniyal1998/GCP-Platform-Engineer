@@ -20,14 +20,23 @@ jobs:
               with:
                 credentials_json: ${{ secrets.GCP_BACKEND_KEY }}
 
+            # x. Set up GCP SDK
+            - name: Set up GCP SDK
+              uses: google-github-actions/setup-gcloud@v2
+              with:
+                project_id: indigo-skyline-467604-d6
+                
             # 2. Test GCP Auth
-            - name: Test GCP Auth
-              run: |
-                gcloud auth list
-                gcloud config list
-                ##Test bucket access
-                gsutil ls gs://backend-static-hosting
-                gsutil ls gs://backend-static-hosting/backend
+            # The following block tests GCP authentication and bucket access.
+            # Uncomment to use for debugging or verification.
+            #
+            # - name: Test GCP Auth
+            #   run: |
+            #     gcloud auth list
+            #     gcloud config list
+            #     ##Test bucket access
+            #     gsutil ls gs://backend-static-hosting
+            #     gsutil ls gs://backend-static-hosting/backend
                                     
             # 3. COnfiguring Docker to use GCloud
             -   name: Configure Docker to use gcloud
