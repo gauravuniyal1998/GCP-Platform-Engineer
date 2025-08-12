@@ -2,7 +2,7 @@ name: deploy backend to GCS
 on:
   push:
     branches: [ main ]
-    paths: [ 'backend/' ]
+    paths: [ 'backend/**' ]
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -10,7 +10,17 @@ jobs:
             contents: read  # Allow reading the repository contents
             id-token: write  # Allow generating an ID token for GCP authentication
         steps:
-            # 1. Test GCP Auth
+
+            # 0 Checkout code
+            - uses: actions/checkout@v4
+
+            # 1. Set up legacy authentication for GCP using JSON key
+            - name: Authenticate to Google Cloud
+              uses: google-github-actions/auth@v1
+              with:
+                credentials_json: ${{ secrets.GCP_BACKEND_KEY }}
+
+            # 2. Test GCP Auth
             - name: Test GCP Auth
               run: |
                 gcloud auth list
@@ -18,17 +28,11 @@ jobs:
                 ##Test bucket access
                 gsutil ls gs://backend-static-hosting
                 gsutil ls gs://backend-static-hosting/backend
-            -   uses: actions/checkout@v4
-            
-            # 2. set up legacy authentication to Google Cloud using JSON key
-            -   name: Authenticate to Google Cloud
-                uses: google-github-actions/auth@v1
-                with:
-                    credentials_json: ${{ secrets.GCP_BACKEND_KEY }}
-            
+                                    
             # 3. COnfiguring Docker to use GCloud
             -   name: Configure Docker to use gcloud
                 run: |
+                    gcloud config set project indigo-skyline-467604-d6
                     gcloud auth configure-docker --quiet
 
             # 4. Build and push Docker image to GCR
@@ -40,7 +44,7 @@ jobs:
             # 5. Deploy to Cloud Run
             -   name: Deploy to Cloud Run
                 run: |
-                    gcloud run deploy backend:latest \
+                    gcloud run deploy backend-service \
                     --image gcr.io/indigo-skyline-467604-d6/backend:latest \
                     --platform managed \
                     --region asia-south2 \
@@ -56,8 +60,7 @@ jobs:
                     parent: false
                     cacheControl: 'public, max-age=3600, immutable'
                     process_gcloudignore: false  # Do not process .gcloudignore file
-
-            # verify sync
+            # 6. Verify sync
             - run: gsutil ls -r gs://backend-static-hosting/backend
 
                 
