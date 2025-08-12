@@ -7,7 +7,7 @@ CORS(app)
 
 @app.route('/status')
 def status():
-    return jsonify({'status': 'Backend is running successfully!'})
+    return jsonify({'status': 'Backend is running !'})
 
 @app.route('/')
 def home():
