@@ -1,6 +1,7 @@
 name: deploy backend to GCS
 on:
   push:
+    branches: [ main ]
     paths: [ 'backend/' ]
 jobs:
     deploy:
