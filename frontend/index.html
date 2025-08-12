@@ -14,10 +14,19 @@
     </div>
 
     <script>
-        const BACKEND_URL = "https://backend-deployment-73039269863.asia-south2.run.app";
+        const BACKEND_URL = "https://backend-service-73039269863.asia-south2.run.app"; //backend URL for my backend service
+        console.log('Fetching backend status from:', `${BACKEND_URL}/status`);
         fetch(`${BACKEND_URL}/status`)
-            .then(res => res.json())
+            .then(res => {
+                console.log('Response status:', res.status);
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+            }   
+                return res.json();
+            })
+            
             .then(data => {
+                console.log('Success:', data);
                 document.getElementById('status').innerText = data.status;
                 document.getElementById('status').style.color = 'green';
             })
