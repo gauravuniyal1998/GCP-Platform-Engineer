@@ -37,6 +37,30 @@
                 document.getElementById('status').innerText = "Failed to fetch backend";
                 document.getElementById('status').style.color = 'red';
             });
+
+
+        // Fetching the home dir message from the backend    
+        console.log('Fetching backend home message from:', `${BACKEND_URL}/`);
+        fetch(`${BACKEND_URL}/`)
+            .then(res => {
+                console.log('Response status for home:', res.status);
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                return res.text();
+            })
+            .then(data => {
+                console.log('Home message:', data);
+                document.getElementById('home').innerText = data;
+                document.getElementById('home').style.color = 'blue';
+            })
+            .catch((error) => {
+                console.error('Failed to fetch home message', error);
+                document.getElementById('home').innerText = "Failed to fetch home message";
+                document.getElementById('home').style.color = 'red';
+            });
+
+
     </script>
 </body>
 </html>
