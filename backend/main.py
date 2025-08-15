@@ -3,6 +3,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
+
 CORS(app, origins=["https://storage.googleapis.com", "https://storage.cloud.google.com", "*"])
 
 @app.route('/status')
