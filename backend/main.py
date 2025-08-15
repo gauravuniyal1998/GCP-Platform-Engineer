@@ -12,7 +12,7 @@ def status():
 
 @app.route('/')
 def home():
-    return "Hello from Flask backend on GCP!"
+    return jsonify({'message': 'Welcome to the Backend Service!'})
 
 @app.route('/health')
 def health():
