@@ -12,7 +12,7 @@
         <p>you are seeing this text as a successful cicd build for frontend. all data is synchonizing properly! - <p style="color: red;">now working - pushed to frontend directory</p></p>
         <p>Backend Status: <span id="status">Loading...</span></p>
         <p>Health endpoint: <span id="health">Fetching...</span></p>
-        <p>Home endpoint status: <span id="home"> Loading...</span></p>
+        <p>Home endpoint status: <span id="home">Loading...</span></p>
         
     </div>
 
@@ -29,15 +29,15 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log('Home message:', data);
-                document.getElementById('/').innerText = data.status;
-                document.getElementById('/').style.color = 'green';
+                console.log('Status data', data);
+                document.getElementById('status').innerText = data.status;
+                document.getElementById('status').style.color = 'green';
             } 
             catch (error) 
             {
                 console.error('Failed to fetch home message', error);
-                document.getElementById('/').innerText = `failed: ${error.message}`;
-                document.getElementById('/').style.color = 'red';
+                document.getElementById('status').innerText = `failed: ${error.message}`;
+                document.getElementById('status').style.color = 'red';
             }
         }
 
@@ -54,14 +54,14 @@
                 }
                 const data = await response.json();
                 console.log('Home message:', data);
-                document.getElementById('/').innerText = data.home;
-                document.getElementById('/').style.color = 'green';
+                document.getElementById('home').innerText = data.message;
+                document.getElementById('home').style.color = 'green';
             } 
             catch (error) 
             {
                 console.error('Failed to fetch home message', error);
-                document.getElementById('/').innerText = `failed: ${error.message}`;
-                document.getElementById('/').style.color = 'red';
+                document.getElementById('home').innerText = `failed: ${error.message}`;
+                document.getElementById('home').style.color = 'red';
             }
         }
 
@@ -75,12 +75,12 @@
                 }
                 const data = await response.json();
                 console.log('Health status:', data);
-                document.getElementById('status').innerText = data.health;
-                document.getElementById('status').style.color = 'green';
+                document.getElementById('health').innerText = `${data.health} - ${data.service}`;
+                document.getElementById('health').style.color = 'green';
             } catch (error) {
                 console.error('Failed to fetch health status', error);
-                document.getElementById('status').innerText = `Failed: ${error.message}`;
-                document.getElementById('status').style.color = 'red';
+                document.getElementById('health').innerText = `Failed: ${error.message}`;
+                document.getElementById('health').style.color = 'red';
             }
         }
         async function refreshEndpoints() 
