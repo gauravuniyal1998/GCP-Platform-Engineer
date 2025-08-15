@@ -11,54 +11,87 @@
         <p style="color: brown;">This is a basic frontend hosted on GCP Compute Engine. - new</p>
         <p>you are seeing this text as a successful cicd build for frontend. all data is synchonizing properly! - <p style="color: red;">now working - pushed to frontend directory</p></p>
         <p>Backend Status: <span id="status">Loading...</span></p>
-        <p>Check the backend service message: <span id="/">fetching the service message</span></p>
+        <p>Health endpoint: <span id="health">Fetching...</span></p>
+        <p>Home endpoint status: <span id="home"> Loading...</span></p>
         
     </div>
 
     <script>
         const BACKEND_URL = "https://backend-service-73039269863.asia-south2.run.app"; //backend URL for my backend service
         console.log('Fetching backend status from:', `${BACKEND_URL}/status`);
-        fetch(`${BACKEND_URL}/status`)
-            .then(res => {
-                console.log('Response status:', res.status);
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-            }   
-                return res.json();
-            })
-            
-            .then(data => {
-                console.log('Success:', data);
-                document.getElementById('status').innerText = data.status;
-                document.getElementById('status').style.color = 'green';
-            })
-            .catch((error) => {
-                console.error('Backend connection failed', error);
-                document.getElementById('status').innerText = "Failed to fetch backend";
-                document.getElementById('status').style.color = 'red';
-            });
+        //fetching the backend status from the backend service
+        async function fetchstatus()
+        {
+            try {
+                console.log('Fetching status message from:', `${BACKEND_URL}/status`);
+                const response = await fetch(`${BACKEND_URL}/status`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Home message:', data);
+                document.getElementById('/').innerText = data.status;
+                document.getElementById('/').style.color = 'green';
+            } 
+            catch (error) 
+            {
+                console.error('Failed to fetch home message', error);
+                document.getElementById('/').innerText = `failed: ${error.message}`;
+                document.getElementById('/').style.color = 'red';
+            }
+        }
 
 
         // Fetching the home dir message from the backend    
         console.log('Fetching backend home message from:', `${BACKEND_URL}/`);
-        fetch(`${BACKEND_URL}/`)
-            .then(res => {
-                console.log('Response status for home:', res.status);
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
+        async function fetchhome()
+        {
+            try {
+                console.log('Fetching home message from:', `${BACKEND_URL}/`);
+                const response = await fetch(`${BACKEND_URL}/`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                return res.text();
-            })
-            .then(data => {
+                const data = await response.json();
                 console.log('Home message:', data);
-                document.getElementById('home').innerText = data;
-                document.getElementById('home').style.color = 'blue';
-            })
-            .catch((error) => {
+                document.getElementById('/').innerText = data.home;
+                document.getElementById('/').style.color = 'green';
+            } 
+            catch (error) 
+            {
                 console.error('Failed to fetch home message', error);
-                document.getElementById('home').innerText = "Failed to fetch home message";
-                document.getElementById('home').style.color = 'red';
-            });
+                document.getElementById('/').innerText = `failed: ${error.message}`;
+                document.getElementById('/').style.color = 'red';
+            }
+        }
+
+        //fetching health status from the backend
+        async function fetchHealth() {
+            try {
+                console.log('Fetching health status from:', `${BACKEND_URL}/health`);
+                const response = await fetch(`${BACKEND_URL}/health`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Health status:', data);
+                document.getElementById('status').innerText = data.health;
+                document.getElementById('status').style.color = 'green';
+            } catch (error) {
+                console.error('Failed to fetch health status', error);
+                document.getElementById('status').innerText = `Failed: ${error.message}`;
+                document.getElementById('status').style.color = 'red';
+            }
+        }
+        async function refreshEndpoints() 
+        {
+            await Promise.all([fetchStatus(), fetchHealth(), fetchRoot()]);
+        }   
+
+        // Call the functions to fetch data
+        fetchstatus();
+        fetchhome();
+        fetchHealth();
 
 
     </script>
